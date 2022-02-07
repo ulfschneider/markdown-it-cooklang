@@ -1,0 +1,75 @@
+.
+The simplest form of an @ingredient
+.
+<p>The simplest form of an <span id="ingredient-1" class="cooklang-ingredient">ingredient</span></p>
+.
+
+.
+This is the same kind of @ingredient{}
+.
+<p>This is the same kind of <span id="ingredient-1" class="cooklang-ingredient">ingredient</span></p>
+.
+
+.
+The simplest form of an @ingredient}
+.
+<p>The simplest form of an <span id="ingredient-1" class="cooklang-ingredient">ingredient}</span></p>
+.
+
+.
+The simplest form of an @ingredient{
+.
+<p>The simplest form of an <span id="ingredient-1" class="cooklang-ingredient">ingredient{</span></p>
+.
+
+.
+@ingredient{} is your best friend
+.
+<p><span id="ingredient-1" class="cooklang-ingredient">ingredient</span> is your best friend</p>
+.
+
+.
+This is my first @ingredient{} for cooklang
+.
+<p>This is my first <span id="ingredient-1" class="cooklang-ingredient">ingredient</span> for cooklang</p>
+.
+
+.
+An @ingredient{1%tablespoon} with an amount and a unit
+.
+<p>An <span id="ingredient-1" class="cooklang-ingredient" amount="1" unit="tablespoon">ingredient</span> with an amount and a unit</p>
+.
+
+.
+A @multi word ingredient{2%kg} with an amount and a unit
+.
+<p>A <span id="ingredient-1" class="cooklang-ingredient" amount="2" unit="kg">multi word ingredient</span> with an amount and a unit</p>
+.
+
+.
+A @multi word ingredient{ 2  % kg } with an amount and a unit
+.
+<p>A <span id="ingredient-1" class="cooklang-ingredient" amount="2" unit="kg">multi word ingredient</span> with an amount and a unit</p>
+.
+
+.
+A @multi word ingredient{ 2  %% kg } with an amount and a unit
+.
+<p>A <span id="ingredient-1" class="cooklang-ingredient" amount="2" unit="% kg">multi word ingredient</span> with an amount and a unit</p>
+.
+
+.
+Two ingredients: @**one** and @*two* without amounts and units
+.
+<p>Two ingredients: <span id="ingredient-1" class="cooklang-ingredient"><strong>one</strong></span> and <span id="ingredient-2" class="cooklang-ingredient"><em>two</em></span> without amounts and units</p>
+.
+
+.
+Two ingredients: @one and @two without amounts and units
+
+[[ingredients]]
+.<p>Two ingredients: <span id="ingredient-1" class="cooklang-ingredient">one</span> and <span id="ingredient-2" class="cooklang-ingredient">two</span> without amounts and units</p>
+<ul class="cooklang-ingredients"><li><span class="ingredient">one</span></li><li><span class="ingredient">two</span></li></ul>.
+
+
+
