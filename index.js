@@ -37,7 +37,7 @@ function render_cooklang_ingredients(tokens, idx, options, env, slf) {
     if (ingredients.length) {
         for (let ingredient of ingredients) {
             render += `<li>`;
-            if (ingredients.amount || ingredients.unit) {
+            if (ingredient.amount || ingredient.unit) {
                 render += '<span class="amount-and-unit">';
 
                 if (ingredient.amount) {
