@@ -36,13 +36,22 @@ function render_cooklang_ingredients(tokens, idx, options, env, slf) {
     let render = '';
     if (ingredients.length) {
         for (let ingredient of ingredients) {
-            render += `<li><span class="ingredient">${markdownIt.renderer.render(ingredient.children)}</span>`;
-            if (ingredient.amount) {
-                render += ` <span class="amount">${ingredient.amount}</span>`;
+            render += `<li>`;
+            if (ingredients.amount || ingredients.unit) {
+                render += '<span class="amount-and-unit">';
+
+                if (ingredient.amount) {
+                    render += `<span class="amount">${ingredient.amount}</span>`;
+                }
+                if (ingredient.unit) {
+                    if (ingredient.amount) {
+                        render += ' ';
+                    }
+                    render += `<span class="unit">${ingredient.unit}</span>`;
+                }
+                render += '</span> '
             }
-            if (ingredient.unit) {
-                render += ` <span class="unit">${ingredient.unit}</span>`;
-            }
+            render += `<span class="ingredient">${markdownIt.renderer.render(ingredient.children)}</span>`;
             render += `</li>`;
         }
     }
