@@ -7,7 +7,7 @@
         "test": "mocha"
     },
     "author": "",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "markdown-it": "^12.3.2",
         "markdown-it-regexp": "^0.4.0",
