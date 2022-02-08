@@ -5,7 +5,7 @@
 let isWhiteSpace;
 let markdownIt;
 
-let PARTS = {
+let COOKLANG = {
     ingredient: {
         startWith: '@',
         singular: 'ingredient',
@@ -23,24 +23,24 @@ let PARTS = {
     }
 }
 
-for (let part in PARTS) {
-    PARTS[part].placeholder = new RegExp(`^\\s*(\\[\\[${PARTS[part].plural}\\]\\]|\\[${PARTS[part].plural}\\]|\\$\\{${PARTS[part].plural}\\})\\s*$`, 'ig');
+for (let part in COOKLANG) {
+    COOKLANG[part].placeholder = new RegExp(`^\\s*(\\[\\[${COOKLANG[part].plural}\\]\\]|\\[${COOKLANG[part].plural}\\]|\\$\\{${COOKLANG[part].plural}\\})\\s*$`, 'ig');
 }
 
 function prepareCooklangState(state) {
     if (!state.env.cooklang) {
         state.env.cooklang = {};
     }
-    for (let part in PARTS) {
-        if (!state.env.cooklang[PARTS[part].plural]) {
-            state.env.cooklang[PARTS[part].plural] = [];
+    for (let part in COOKLANG) {
+        if (!state.env.cooklang[COOKLANG[part].plural]) {
+            state.env.cooklang[COOKLANG[part].plural] = [];
         }
     }
 }
 
 
 
-/* render */
+/* render generic */
 
 function render_cooklang_inline(tokens, idx, options, env, slf, part) {
     let id = tokens[idx].meta.id;
@@ -58,34 +58,6 @@ function render_cooklang_inline(tokens, idx, options, env, slf, part) {
     render += `>${markdownIt.renderer.render(children)}</span>`;
 
     return render;
-}
-
-function render_cooklang_inline_ingredient(tokens, idx, options, env, slf) {
-    return render_cooklang_inline(tokens, idx, options, env, slf, PARTS.ingredient);
-}
-
-function render_cooklang_inline_cookware(tokens, idx, options, env, slf) {
-    return render_cooklang_inline(tokens, idx, options, env, slf, PARTS.cookware);
-}
-
-function render_cooklang_inline_timer(tokens, idx, options, env, slf) {
-    return render_cooklang_inline(tokens, idx, options, env, slf, PARTS.timer);
-}
-
-function render_cooklang_ingredients_open(tokens, indx, options, env, slf) {
-    return `<ul class="cooklang-${PARTS.ingredient.plural}">`;
-}
-
-function render_cooklang_cookware_open(tokens, indx, options, env, slf) {
-    return `<ul class="cooklang-${PARTS.cookware.plural}">`;
-}
-
-function render_cooklang_timers_open(tokens, indx, options, env, slf) {
-    return `<ul class="cooklang-${PARTS.timer.plural}">`;
-}
-
-function render_cooklang_list_close(tokens, indx, options, env, slf) {
-    return `</ul>\n`;
 }
 
 function render_cooklang_list(tokens, idx, options, env, slf, part) {
@@ -115,20 +87,8 @@ function render_cooklang_list(tokens, idx, options, env, slf, part) {
     return render;
 }
 
-function render_cooklang_ingredients(tokens, idx, options, env, slf) {
-    return render_cooklang_list(tokens, idx, options, env, slf, PARTS.ingredient);
-}
 
-function render_cooklang_cookware(tokens, idx, options, env, slf) {
-    return render_cooklang_list(tokens, idx, options, env, slf, PARTS.cookware);
-}
-
-function render_cooklang_timers(tokens, idx, options, env, slf) {
-    return render_cooklang_list(tokens, idx, options, env, slf, PARTS.timer);
-}
-
-
-/* inline rules */
+/* inline rule generic */
 
 function cooklang_inline(state, silent, part) {
     let id,
@@ -211,22 +171,7 @@ function cooklang_inline(state, silent, part) {
     return true;
 }
 
-// Process inline ingredients: @ingredient<whitespace> as well as @ingredient{}
-function cooklang_inline_ingredient(state, silent) {
-    return cooklang_inline(state, silent, PARTS.ingredient);
-}
-
-// Process inline cookware: #cookware<whitespace> as well as #cookware{}
-function cooklang_inline_cookware(state, silent) {
-    return cooklang_inline(state, silent, PARTS.cookware);
-}
-
-// Process inline timers: ~timer<whitespace> as well as ~timer{}
-function cooklang_inline_timer(state, silent) {
-    return cooklang_inline(state, silent, PARTS.timer);
-}
-
-/* block rules */
+/* block rule generic */
 
 function cooklang_block(state, startLine, endLine, silent, part) {
     let token;
@@ -262,21 +207,78 @@ function cooklang_block(state, startLine, endLine, silent, part) {
 }
 
 
+/* render specific */
+
+function render_cooklang_inline_ingredient(tokens, idx, options, env, slf) {
+    return render_cooklang_inline(tokens, idx, options, env, slf, COOKLANG.ingredient);
+}
+
+function render_cooklang_inline_cookware(tokens, idx, options, env, slf) {
+    return render_cooklang_inline(tokens, idx, options, env, slf, COOKLANG.cookware);
+}
+
+function render_cooklang_inline_timer(tokens, idx, options, env, slf) {
+    return render_cooklang_inline(tokens, idx, options, env, slf, COOKLANG.timer);
+}
+
+function render_cooklang_ingredients_open(tokens, indx, options, env, slf) {
+    return `<ul class="cooklang-${COOKLANG.ingredient.plural}">`;
+}
+
+function render_cooklang_cookware_open(tokens, indx, options, env, slf) {
+    return `<ul class="cooklang-${COOKLANG.cookware.plural}">`;
+}
+
+function render_cooklang_timers_open(tokens, indx, options, env, slf) {
+    return `<ul class="cooklang-${COOKLANG.timer.plural}">`;
+}
+
+function render_cooklang_list_close(tokens, indx, options, env, slf) {
+    return `</ul>\n`;
+}
+
+function render_cooklang_ingredients(tokens, idx, options, env, slf) {
+    return render_cooklang_list(tokens, idx, options, env, slf, COOKLANG.ingredient);
+}
+
+function render_cooklang_cookware(tokens, idx, options, env, slf) {
+    return render_cooklang_list(tokens, idx, options, env, slf, COOKLANG.cookware);
+}
+
+function render_cooklang_timers(tokens, idx, options, env, slf) {
+    return render_cooklang_list(tokens, idx, options, env, slf, COOKLANG.timer);
+}
+
+
 // Process ingredient list: [[ingredients]]
 function cooklang_ingredients(state, startLine, endLine, silent) {
-    return cooklang_block(state, startLine, endLine, silent, PARTS.ingredient);
+    return cooklang_block(state, startLine, endLine, silent, COOKLANG.ingredient);
 }
 
 // Process cookware list: [[cookware]]
 function cooklang_cookware(state, startLine, endLine, silent) {
-    return cooklang_block(state, startLine, endLine, silent, PARTS.cookware);
+    return cooklang_block(state, startLine, endLine, silent, COOKLANG.cookware);
 }
 
 // Process timer list: [[timers]]
 function cooklang_timers(state, startLine, endLine, silent) {
-    return cooklang_block(state, startLine, endLine, silent, PARTS.timer);
+    return cooklang_block(state, startLine, endLine, silent, COOKLANG.timer);
 }
 
+// Process inline ingredients: @ingredient<whitespace> as well as @ingredient{}
+function cooklang_inline_ingredient(state, silent) {
+    return cooklang_inline(state, silent, COOKLANG.ingredient);
+}
+
+// Process inline cookware: #cookware<whitespace> as well as #cookware{}
+function cooklang_inline_cookware(state, silent) {
+    return cooklang_inline(state, silent, COOKLANG.cookware);
+}
+
+// Process inline timers: ~timer<whitespace> as well as ~timer{}
+function cooklang_inline_timer(state, silent) {
+    return cooklang_inline(state, silent, COOKLANG.timer);
+}
 
 module.exports = function cooklang_plugin(md) {
     isWhiteSpace = md.utils.isWhiteSpace;
