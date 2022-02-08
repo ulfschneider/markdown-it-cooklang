@@ -1,66 +1,137 @@
 'use strict';
 
+/* this is the markdown-it implementation of https://cooklang.org */
+
 let isWhiteSpace;
 let markdownIt;
-const INGREDIENTS_PLACEHOLDER = /[[ingredients]]/i;
 
-function render_cooklang_inline_ingredient(tokens, idx, options, env, slf) {
+let PARTS = {
+    ingredient: {
+        startWith: '@',
+        singular: 'ingredient',
+        plural: 'ingredients'
+    },
+    cookware: {
+        startWith: '#',
+        singular: 'cookware',
+        plural: 'cookware'
+    },
+    timer: {
+        startWith: '~',
+        singular: 'timer',
+        plural: 'timers'
+    }
+}
 
+for (let part in PARTS) {
+    PARTS[part].placeholder = new RegExp(`^\\s*(\\[\\[${PARTS[part].plural}\\]\\]|\\[${PARTS[part].plural}\\]|\\$\\{${PARTS[part].plural}\\})\\s*$`, 'ig');
+}
+
+function prepareCooklangState(state) {
+    if (!state.env.cooklang) {
+        state.env.cooklang = {};
+    }
+    for (let part in PARTS) {
+        if (!state.env.cooklang[PARTS[part].plural]) {
+            state.env.cooklang[PARTS[part].plural] = [];
+        }
+    }
+}
+
+
+
+/* render */
+
+function render_cooklang_inline(tokens, idx, options, env, slf, part) {
     let id = tokens[idx].meta.id;
     let children = tokens[idx].meta.children;
     let amount = tokens[idx].meta.amount;
     let unit = tokens[idx].meta.unit;
 
-    let render = `<span id="${id}" class="cooklang-ingredient"`
+    let render = `<span id="${id}" class="cooklang-${part.singular}"`
     if (amount) {
-        render += ` amount="${amount}"`;
+        render += ` cooklang-amount="${amount}"`;
     }
     if (unit) {
-        render += ` unit="${unit}"`;
+        render += ` cooklang-unit="${unit}"`;
     }
     render += `>${markdownIt.renderer.render(children)}</span>`;
 
     return render;
 }
 
+function render_cooklang_inline_ingredient(tokens, idx, options, env, slf) {
+    return render_cooklang_inline(tokens, idx, options, env, slf, PARTS.ingredient);
+}
+
+function render_cooklang_inline_cookware(tokens, idx, options, env, slf) {
+    return render_cooklang_inline(tokens, idx, options, env, slf, PARTS.cookware);
+}
+
+function render_cooklang_inline_timer(tokens, idx, options, env, slf) {
+    return render_cooklang_inline(tokens, idx, options, env, slf, PARTS.timer);
+}
+
 function render_cooklang_ingredients_open(tokens, indx, options, env, slf) {
-    return `<ul class="cooklang-ingredients">`;
+    return `<ul class="cooklang-${PARTS.ingredient.plural}">`;
 }
 
-function render_cooklang_ingredients_close(tokens, indx, options, env, slf) {
-    return `</ul>`;
+function render_cooklang_cookware_open(tokens, indx, options, env, slf) {
+    return `<ul class="cooklang-${PARTS.cookware.plural}">`;
 }
 
-function render_cooklang_ingredients(tokens, idx, options, env, slf) {
-    let ingredients = tokens[idx].meta.ingredients;
+function render_cooklang_timers_open(tokens, indx, options, env, slf) {
+    return `<ul class="cooklang-${PARTS.timer.plural}">`;
+}
+
+function render_cooklang_list_close(tokens, indx, options, env, slf) {
+    return `</ul>\n`;
+}
+
+function render_cooklang_list(tokens, idx, options, env, slf, part) {
+    let list = tokens[idx].meta[part.plural];
     let render = '';
-    if (ingredients.length) {
-        for (let ingredient of ingredients) {
+    if (list.length) {
+        for (let item of list) {
             render += `<li>`;
-            if (ingredient.amount || ingredient.unit) {
+            if (item.amount || item.unit) {
                 render += '<span class="amount-and-unit">';
 
-                if (ingredient.amount) {
-                    render += `<span class="amount">${ingredient.amount}</span>`;
+                if (item.amount) {
+                    render += `<span class="amount">${item.amount}</span>`;
                 }
-                if (ingredient.unit) {
-                    if (ingredient.amount) {
-                        render += ' ';
+                if (item.unit) {
+                    if (item.amount) {
+                        render += '&#x202f;';
                     }
-                    render += `<span class="unit">${ingredient.unit}</span>`;
+                    render += `<span class="unit">${item.unit}</span>`;
                 }
                 render += '</span> '
             }
-            render += `<span class="ingredient">${markdownIt.renderer.render(ingredient.children)}</span>`;
+            render += `<span class="${part.singular}">${markdownIt.renderer.render(item.children)}</span>`;
             render += `</li>`;
         }
     }
     return render;
 }
 
-// Process inline ingredients: @ingredient<whitespace> as well as @ingredient{}
-function cooklang_inline_ingredient(state, silent) {
-    let ingredientId,
+function render_cooklang_ingredients(tokens, idx, options, env, slf) {
+    return render_cooklang_list(tokens, idx, options, env, slf, PARTS.ingredient);
+}
+
+function render_cooklang_cookware(tokens, idx, options, env, slf) {
+    return render_cooklang_list(tokens, idx, options, env, slf, PARTS.cookware);
+}
+
+function render_cooklang_timers(tokens, idx, options, env, slf) {
+    return render_cooklang_list(tokens, idx, options, env, slf, PARTS.timer);
+}
+
+
+/* inline rules */
+
+function cooklang_inline(state, silent, part) {
+    let id,
         token,
         tokens,
         content,
@@ -69,9 +140,11 @@ function cooklang_inline_ingredient(state, silent) {
         start = state.pos,
         max = state.posMax;
 
-    if (state.src.charCodeAt(start) !== 0x40 /* @ */) { return false; }
-    if (start > 0 && !isWhiteSpace(state.src.charCodeAt(start - 1)) /*there must be whitespace before @*/) { return false; }
-    if (start + 3 >= state.posMax) { return false; } /* @c{} */
+    prepareCooklangState(state);
+
+    if (state.src.charCodeAt(start) !== part.startWith.charCodeAt(0)) { return false; }
+    if (start > 0 && !isWhiteSpace(state.src.charCodeAt(start - 1)) /*there must be whitespace before the starting identifier*/) { return false; }
+    if (start + 3 >= state.posMax) { return false; }
 
     state.pos++;
     let openCurlPos, closeCurlPos, spacePos;
@@ -100,14 +173,6 @@ function cooklang_inline_ingredient(state, silent) {
 
     //found!
     if (!silent) {
-        if (!state.env.cooklang) {
-            state.env.cooklang = {};
-        }
-        if (!state.env.cooklang.ingredients) {
-            state.env.cooklang.ingredients = [];
-        }
-
-
         if (closeCurlPos) {
             content = state.src.slice(start + 1, openCurlPos).trim();
             amount = state.src.slice(openCurlPos + 1, closeCurlPos).trim();
@@ -127,16 +192,16 @@ function cooklang_inline_ingredient(state, silent) {
             tokens = []
         );
 
-        state.env.cooklang.ingredients.push({
+        state.env.cooklang[part.plural].push({
             content: content,
             amount: amount,
             unit: unit,
             children: tokens
         });
-        ingredientId = `ingredient-${state.env.cooklang.ingredients.length}`; //id counts start at 1, not at 0!
-        token = state.push('cooklang_inline_ingredient', '', 0)
+        id = `${part.singular}-${state.env.cooklang[part.plural].length}`; //id counts start at 1, not at 0!
+        token = state.push(`cooklang_inline_${part.singular}`, '', 0)
         token.meta = {
-            id: ingredientId,
+            id: id,
             content: content,
             amount: amount,
             unit: unit,
@@ -146,47 +211,70 @@ function cooklang_inline_ingredient(state, silent) {
     return true;
 }
 
+// Process inline ingredients: @ingredient<whitespace> as well as @ingredient{}
+function cooklang_inline_ingredient(state, silent) {
+    return cooklang_inline(state, silent, PARTS.ingredient);
+}
 
-// Process ingredient list: [[ingredients]]
-function cooklang_ingredients(state, startLine, endLine, silent) {
+// Process inline cookware: #cookware<whitespace> as well as #cookware{}
+function cooklang_inline_cookware(state, silent) {
+    return cooklang_inline(state, silent, PARTS.cookware);
+}
+
+// Process inline timers: ~timer<whitespace> as well as ~timer{}
+function cooklang_inline_timer(state, silent) {
+    return cooklang_inline(state, silent, PARTS.timer);
+}
+
+/* block rules */
+
+function cooklang_block(state, startLine, endLine, silent, part) {
     let token;
     const pos = state.bMarks[startLine] + state.tShift[startLine];
     const max = state.eMarks[startLine];
 
-    // use whitespace as a line tokenizer and extract the first token
-    // to test against the placeholder anchored pattern, rejecting if false
-    const lineFirstToken = state.src.slice(pos, max).split(' ')[0]
-    if (!INGREDIENTS_PLACEHOLDER.test(lineFirstToken)) {
+    if (!part.placeholder.test(state.src.slice(pos, max))) {
         return false;
     }
 
     if (silent) {
         return true;
     }
-    if (!state.env.cooklang) {
-        state.env.cooklang = {};
-    }
-    if (!state.env.cooklang.ingredients) {
-        state.env.cooklang.ingredients = [];
-    }
+    prepareCooklangState(state);
 
-    state.line = startLine + 1
-    token = state.push('cooklang_ingredients_open', 'ul', 1);
+    state.line = startLine + 1;
+
+    token = state.push(`cooklang_${part.plural}_open`, 'ul', 1);
     token.markup = '';
     token.map = [startLine, state.line];
 
-    token = state.push('cooklang_ingredients', '', 0);
+    token = state.push(`cooklang_${part.plural}`, '', 0);
     token.markup = '';
     token.map = [startLine, state.line];
     token.children = [];
-    token.meta = {
-        ingredients: state.env.cooklang.ingredients
-    }
+    token.meta = {};
+    token.meta[part.plural] = state.env.cooklang[part.plural];
 
-    token = state.push('cooklang_ingredients_close', 'ul', -1);
+    token = state.push(`cooklang_${part.plural}_close`, 'ul', -1);
     token.markup = '';
 
     return true;
+}
+
+
+// Process ingredient list: [[ingredients]]
+function cooklang_ingredients(state, startLine, endLine, silent) {
+    return cooklang_block(state, startLine, endLine, silent, PARTS.ingredient);
+}
+
+// Process cookware list: [[cookware]]
+function cooklang_cookware(state, startLine, endLine, silent) {
+    return cooklang_block(state, startLine, endLine, silent, PARTS.cookware);
+}
+
+// Process timer list: [[timers]]
+function cooklang_timers(state, startLine, endLine, silent) {
+    return cooklang_block(state, startLine, endLine, silent, PARTS.timer);
 }
 
 
@@ -200,5 +288,23 @@ module.exports = function cooklang_plugin(md) {
     md.block.ruler.after('html_block', 'cooklang-ingredients', cooklang_ingredients);
     md.renderer.rules.cooklang_ingredients_open = render_cooklang_ingredients_open;
     md.renderer.rules.cooklang_ingredients = render_cooklang_ingredients;
-    md.renderer.rules.cooklang_ingredients_close = render_cooklang_ingredients_close;
+    md.renderer.rules.cooklang_ingredients_close = render_cooklang_list_close;
+
+
+    md.inline.ruler.after('html_inline', 'cooklang-inline-cookware', cooklang_inline_cookware);
+    md.renderer.rules.cooklang_inline_cookware = render_cooklang_inline_cookware;
+
+    md.block.ruler.after('html_block', 'cooklang-cookware', cooklang_cookware);
+    md.renderer.rules.cooklang_cookware_open = render_cooklang_cookware_open;
+    md.renderer.rules.cooklang_cookware = render_cooklang_cookware;
+    md.renderer.rules.cooklang_cookware_close = render_cooklang_list_close;
+
+
+    md.inline.ruler.after('html_inline', 'cooklang-inline-timer', cooklang_inline_timer);
+    md.renderer.rules.cooklang_inline_timer = render_cooklang_inline_timer;
+
+    md.block.ruler.after('html_block', 'cooklang-timer', cooklang_timers);
+    md.renderer.rules.cooklang_timers_open = render_cooklang_timers_open;
+    md.renderer.rules.cooklang_timers = render_cooklang_timers;
+    md.renderer.rules.cooklang_timers_close = render_cooklang_list_close;
 };
