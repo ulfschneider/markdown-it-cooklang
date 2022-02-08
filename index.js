@@ -1,6 +1,9 @@
 'use strict';
 
-/* this is the markdown-it implementation of https://cooklang.org */
+/* this is the markdown-it implementation of https://cooklang.org 
+   see https://github.com/cooklang/spec/blob/main/EBNF.md
+
+*/
 
 let isWhiteSpace;
 let markdownIt;
@@ -22,8 +25,10 @@ let COOKLANG = {
         plural: 'timers'
     }
 }
+const AMOUNT_AND_UNIT_DELIMITERS = '%*';
 
 for (let part in COOKLANG) {
+    //e.g. /^\s*(\[\[ingredients\]\]|\[ingredients\]|\$\{ingredients\})\s*$/ig;
     COOKLANG[part].placeholder = new RegExp(`^\\s*(\\[\\[${COOKLANG[part].plural}\\]\\]|\\[${COOKLANG[part].plural}\\]|\\$\\{${COOKLANG[part].plural}\\})\\s*$`, 'ig');
 }
 
@@ -136,7 +141,13 @@ function cooklang_inline(state, silent, part) {
         if (closeCurlPos) {
             content = state.src.slice(start + 1, openCurlPos).trim();
             amount = state.src.slice(openCurlPos + 1, closeCurlPos).trim();
-            let pos = amount.indexOf('%');
+            let pos;
+            for (let delimiter of AMOUNT_AND_UNIT_DELIMITERS) {
+                pos = amount.indexOf(delimiter);
+                if (pos >= 0) {
+                    break;
+                }
+            }
             if (pos >= 0) {
                 unit = amount.substring(pos + 1).trim();
                 amount = amount.substring(0, pos).trim();

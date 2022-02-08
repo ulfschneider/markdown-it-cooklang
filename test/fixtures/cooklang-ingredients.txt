@@ -82,4 +82,14 @@ Two ingredients: @one{2%kg} and @two{100%g} including amounts and units
 <ul class="cooklang-ingredients"><li><span class="amount-and-unit"><span class="amount">2</span>&#x202f;<span class="unit">kg</span></span> <span class="ingredient">one</span></li><li><span class="amount-and-unit"><span class="amount">100</span>&#x202f;<span class="unit">g</span></span> <span class="ingredient">two</span></li></ul>
 .
 
+.
+Cookware: #tea pot{1} 
+
+[[cookware]]
+.
+<p>Cookware: <span id="cookware-1" class="cooklang-cookware" cooklang-amount="1">tea pot</span></p>
+<ul class="cooklang-cookware"><li><span class="amount-and-unit"><span class="amount">1</span></span> <span class="cookware">tea pot</span></li></ul>
+.
+
+
 
