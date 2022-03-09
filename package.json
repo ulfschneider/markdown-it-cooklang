@@ -1,18 +1,25 @@
 {
     "name": "markdown-it-cooklang",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "A reference to cooklang",
     "main": "index.js",
     "scripts": {
         "test": "mocha"
     },
-    "author": "",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ulfschneider/markdown-it-cooklang.git"
+    },
+    "author": "Ulf Schneider",
     "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/ulfschneider/markdown-it-cooklang/issues"
+    },
+    "homepage": "https://ulf.codes",
     "devDependencies": {
         "markdown-it": "^12.3.2",
-        "markdown-it-regexp": "^0.4.0",
         "markdown-it-testgen": "^0.1.6",
-        "mocha": "^9.2.0",
+        "mocha": "^9.2.1",
         "path": "^0.12.7"
     }
 }
