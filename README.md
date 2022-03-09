@@ -1,6 +1,6 @@
 # markdown-it-cooklang
 
-An early incomplete implementation of [https://cooklang.org](cooklang.org) for markdown-it.
+An early incomplete implementation of [cooklang.org](https://cooklang.org) for markdown-it.
 
 For now implemented are:
 
