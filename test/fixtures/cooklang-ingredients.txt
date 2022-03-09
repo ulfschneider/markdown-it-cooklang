@@ -79,7 +79,7 @@ Two ingredients: @one{2%kg} and @two{100%g} including amounts and units
 [[ingredients]]
 .
 <p>Two ingredients: <span id="ingredient-1" class="cooklang-ingredient" cooklang-amount="2" cooklang-unit="kg">one</span> and <span id="ingredient-2" class="cooklang-ingredient" cooklang-amount="100" cooklang-unit="g">two</span> including amounts and units</p>
-<ul class="cooklang-ingredients"><li><span class="amount-and-unit"><span class="amount">2</span>&#x202f;<span class="unit">kg</span></span> <span class="ingredient">one</span></li><li><span class="amount-and-unit"><span class="amount">100</span>&#x202f;<span class="unit">g</span></span> <span class="ingredient">two</span></li></ul>
+<ul class="cooklang-ingredients"><li><span class="amount-and-unit"><span class="amount">2</span> <span class="unit">kg</span></span> <span class="ingredient">one</span></li><li><span class="amount-and-unit"><span class="amount">100</span> <span class="unit">g</span></span> <span class="ingredient">two</span></li></ul>
 .
 
 .

@@ -79,7 +79,7 @@ function render_cooklang_list(tokens, idx, options, env, slf, part) {
                 }
                 if (item.unit) {
                     if (item.amount) {
-                        render += '&#x202f;';
+                        render += ' '; //make this configurable
                     }
                     render += `<span class="unit">${item.unit}</span>`;
                 }
