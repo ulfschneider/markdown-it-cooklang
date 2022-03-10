@@ -14,7 +14,7 @@ I used the logic for a different thing than a cooking recipe. Instead, I describ
 ## Install
 
 ```shell
-npm install --save-dev markdown-it-cooklang
+npm i markdown-it-cooklang
 ```
 
 ## Usage
