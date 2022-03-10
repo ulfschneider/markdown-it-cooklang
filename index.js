@@ -11,16 +11,22 @@ let markdownIt;
 let COOKLANG = {
     ingredient: {
         startWith: '@',
+        inlineDisplayName: true,
+        inlineDisplayAmount: false,
         singular: 'ingredient',
         plural: 'ingredients'
     },
     cookware: {
         startWith: '#',
+        inlineDisplayName: true,
+        inlineDisplayAmount: false,
         singular: 'cookware',
         plural: 'cookware'
     },
     timer: {
         startWith: '~',
+        inlineDisplayName: false,
+        inlineDisplayAmount: true,
         singular: 'timer',
         plural: 'timers'
     }
@@ -52,16 +58,28 @@ function render_cooklang_inline(tokens, idx, options, env, slf, part) {
     let children = tokens[idx].meta.children;
     let amount = tokens[idx].meta.amount;
     let unit = tokens[idx].meta.unit;
+    let render = '';
 
-    let render = `<span id="${id}" class="cooklang-${part.singular}"`
-    if (amount) {
-        render += ` cooklang-amount="${amount}"`;
+    if (part.inlineDisplayName || part.inlineDisplayAmount) {
+        render = `<span id="${id}" class="cooklang-${part.singular}"`
+        if (amount) {
+            render += ` cooklang-amount="${amount}"`;
+        }
+        if (unit) {
+            render += ` cooklang-unit="${unit}"`;
+        }
+        render += '>';
+        if (part.inlineDisplayName) {
+            render += markdownIt.renderer.render(children);
+        }
+        if (part.inlineDisplayAmount) {
+            if (part.inlineDisplayName) {
+                render += ' ';
+            }
+            render += `${amount} ${unit}`;
+        }
+        render += '</span>'
     }
-    if (unit) {
-        render += ` cooklang-unit="${unit}"`;
-    }
-    render += `>${markdownIt.renderer.render(children)}</span>`;
-
     return render;
 }
 

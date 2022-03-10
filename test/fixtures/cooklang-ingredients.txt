@@ -91,5 +91,14 @@ Cookware: #tea pot{1}
 <ul class="cooklang-cookware"><li><span class="amount-and-unit"><span class="amount">1</span></span> <span class="cookware">tea pot</span></li></ul>
 .
 
+.
+Lay the potatoes on a #baking sheet{} and place into the #oven{}. Bake for ~{25%minutes}.
+
+[[cookware]]
+.
+<p>Lay the potatoes on a <span id="cookware-1" class="cooklang-cookware">baking sheet</span> and place into the <span id="cookware-2" class="cooklang-cookware">oven</span>. Bake for <span id="timer-1" class="cooklang-timer" cooklang-amount="25" cooklang-unit="minutes">25 minutes</span>.</p>
+<ul class="cooklang-cookware"><li><span class="cookware">baking sheet</span></li><li><span class="cookware">oven</span></li></ul>
+.
+
 
 
