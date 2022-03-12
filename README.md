@@ -14,7 +14,7 @@ Missing implementation:
 - Metadata
 - Shopping list specification
 
-I used the logic for a different thing than a cooking recipe. Instead, I described on my 11ty powered website the process of building a bicycle with all reguired ingredients (parts), and cookware (tools). At the end of the document you see a list of parts to order and tools to use. Those lists are created by using markdown-it-cooklang. See [Fairlight Strael Build Notes](https://ulf.codes/2022-02-27-fairlight-strael-build-notes/).
+I used the logic for a different thing than a cooking recipe. Instead, I described on my 11ty powered website the process of building a bicycle with all required ingredients (parts), and cookware (tools). See [Fairlight Strael Build Notes](https://ulf.codes/2022-02-27-fairlight-strael-build-notes/). At the end of the document you see a list of parts to order and tools to use. Those lists are created by using markdown-it-cooklang.
 
 
 ## Install
