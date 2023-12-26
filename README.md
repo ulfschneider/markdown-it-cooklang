@@ -16,7 +16,6 @@ Missing implementation:
 
 I used the logic for a different thing than a cooking recipe. Instead, I described on my 11ty powered website the process of building a bicycle with all required ingredients (parts), and cookware (tools). See [Fairlight Strael Build Notes](https://ulf.codes/2022-02-27-fairlight-strael-build-notes/). At the end of the document you see a list of parts to order and tools to use. Those lists are created by using markdown-it-cooklang.
 
-
 ## Install
 
 ```shell
@@ -26,16 +25,56 @@ npm i markdown-it-cooklang
 ## Usage
 
 ```js
-var markdownIt = require('markdown-it');
-var markdownItCooklang = require('markdown-it-cooklang');
- 
+var markdownIt = require("markdown-it");
+var markdownItCooklang = require("markdown-it-cooklang");
+
 markdownIt({
-    html: true
-    })
-    .use(markdownItCooklang);
+  html: true,
+}).use(markdownItCooklang);
 ```
 
 ## Configuration
 
-There is no configuration.
+The default configuration is
 
+```js
+{
+    ingredient: {
+      startWith: "@",
+      inlineDisplayName: true,
+      inlineDisplayAmount: false,
+      singular: "ingredient",
+      plural: "ingredients",
+    },
+    cookware: {
+      startWith: "#",
+      inlineDisplayName: true,
+      inlineDisplayAmount: false,
+      singular: "cookware",
+      plural: "cookware",
+    },
+    timer: {
+      startWith: "~",
+      inlineDisplayName: false,
+      inlineDisplayAmount: true,
+      singular: "timer",
+      plural: "timers",
+    }
+}
+```
+
+You can create a configuration object that adjusts all or some of the above settings, and pass that configuration object to markdown-it-cooklang during setup:
+
+```js
+// configuring aspects of markdown-it-cooklang
+var markdownIt = require("markdown-it");
+var markdownItCooklang = require("markdown-it-cooklang");
+
+markdownIt({
+  html: true,
+}).use(markdownItCooklang, {
+  ingredients: {
+    inlineDisplayAmount: true,
+  },
+});
+```

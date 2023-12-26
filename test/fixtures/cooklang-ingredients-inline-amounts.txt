@@ -1,0 +1,104 @@
+.
+The simplest form of an @ingredient
+.
+<p>The simplest form of an <span id="ingredient-1" class="cooklang-ingredient">ingredient</span></p>
+.
+
+.
+This is the same kind of @ingredient{}
+.
+<p>This is the same kind of <span id="ingredient-1" class="cooklang-ingredient">ingredient</span></p>
+.
+
+.
+The simplest form of an @ingredient}
+.
+<p>The simplest form of an <span id="ingredient-1" class="cooklang-ingredient">ingredient}</span></p>
+.
+
+.
+The simplest form of an @ingredient{
+.
+<p>The simplest form of an <span id="ingredient-1" class="cooklang-ingredient">ingredient{</span></p>
+.
+
+.
+@ingredient{} is your best friend
+.
+<p><span id="ingredient-1" class="cooklang-ingredient">ingredient</span> is your best friend</p>
+.
+
+.
+This is my first @ingredient{} for cooklang
+.
+<p>This is my first <span id="ingredient-1" class="cooklang-ingredient">ingredient</span> for cooklang</p>
+.
+
+.
+An @ingredient{1%tablespoon} with an amount and a unit
+.
+<p>An <span id="ingredient-1" class="cooklang-ingredient" cooklang-amount="1" cooklang-unit="tablespoon">ingredient: 1 tablespoon</span> with an amount and a unit</p>
+.
+
+.
+A @multi word ingredient{2%kg} with an amount and a unit
+.
+<p>A <span id="ingredient-1" class="cooklang-ingredient" cooklang-amount="2" cooklang-unit="kg">multi word ingredient: 2 kg</span> with an amount and a unit</p>
+.
+
+.
+A @multi word ingredient{ 2  % kg } with an amount and a unit
+.
+<p>A <span id="ingredient-1" class="cooklang-ingredient" cooklang-amount="2" cooklang-unit="kg">multi word ingredient: 2 kg</span> with an amount and a unit</p>
+.
+
+.
+A @multi word ingredient{ 2  %% kg } with an amount and a unit
+.
+<p>A <span id="ingredient-1" class="cooklang-ingredient" cooklang-amount="2" cooklang-unit="% kg">multi word ingredient: 2 % kg</span> with an amount and a unit</p>
+.
+
+.
+Two ingredients: @**one** and @*two* without amounts and units
+.
+<p>Two ingredients: <span id="ingredient-1" class="cooklang-ingredient"><strong>one</strong></span> and <span id="ingredient-2" class="cooklang-ingredient"><em>two</em></span> without amounts and units</p>
+.
+
+.
+Two ingredients: @one and @two without amounts and units
+
+[[ingredients]]    
+.
+<p>Two ingredients: <span id="ingredient-1" class="cooklang-ingredient">one</span> and <span id="ingredient-2" class="cooklang-ingredient">two</span> without amounts and units</p>
+<ul class="cooklang-ingredients"><li><span class="ingredient">one</span></li><li><span class="ingredient">two</span></li></ul>
+.
+
+.
+Two ingredients: @one{2%kg} and @two{100%g} including amounts and units
+
+[[ingredients]]
+.
+<p>Two ingredients: <span id="ingredient-1" class="cooklang-ingredient" cooklang-amount="2" cooklang-unit="kg">one: 2 kg</span> and <span id="ingredient-2" class="cooklang-ingredient" cooklang-amount="100" cooklang-unit="g">two: 100 g</span> including amounts and units</p>
+<ul class="cooklang-ingredients"><li><span class="amount-and-unit"><span class="amount">2</span> <span class="unit">kg</span></span> <span class="ingredient">one</span></li><li><span class="amount-and-unit"><span class="amount">100</span> <span class="unit">g</span></span> <span class="ingredient">two</span></li></ul>
+.
+
+.
+Cookware: #tea pot{1} 
+
+[[cookware]]
+.
+<p>Cookware: <span id="cookware-1" class="cooklang-cookware" cooklang-amount="1">tea pot</span></p>
+<ul class="cooklang-cookware"><li><span class="amount-and-unit"><span class="amount">1</span></span> <span class="cookware">tea pot</span></li></ul>
+.
+
+.
+Lay the potatoes on a #baking sheet{} and place into the #oven{}. Bake for ~{25%minutes}.
+
+[[cookware]]
+.
+<p>Lay the potatoes on a <span id="cookware-1" class="cooklang-cookware">baking sheet</span> and place into the <span id="cookware-2" class="cooklang-cookware">oven</span>. Bake for <span id="timer-1" class="cooklang-timer" cooklang-amount="25" cooklang-unit="minutes">25 minutes</span>.</p>
+<ul class="cooklang-cookware"><li><span class="cookware">baking sheet</span></li><li><span class="cookware">oven</span></li></ul>
+.
+
+
+
